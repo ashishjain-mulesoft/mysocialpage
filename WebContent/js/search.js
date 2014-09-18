@@ -1,17 +1,100 @@
 function handleAPILoaded() {
-  $('#search-button').attr('disabled', false);
+	$('#search-button').attr('disabled', false);
 }
 
 // Search for a specified string.
 function search() {
-  var q = $('#query').val();
-  var request = gapi.client.youtube.search.list({
-    q: q,
-    part: 'snippet'
-  });
 
-  request.execute(function(response) {
-    var str = JSON.stringify(response.result);
-    $('#search-container').html('<pre>' + str + '</pre>');
-  });
+	var q = $('#query').val();
+
+	jQuery
+			.ajax({
+				type : "GET",
+				url : "/myfirstmashup/search?keyword=" + q,
+				async : false,
+				dataType : 'json',
+				success : function(response) {
+					var content = '<div class="row">';
+					var i;
+					for (i = 1; i <= response.length; i++) {
+						var c = i - 1;
+						content = content
+								+ '<div class="col-xs-3"><div class="panel panel-primary">'
+						content = content
+								+ '<div class="panel-heading"><h3 class="panel-title">'
+								+ response[c].title
+								+ '</h3></div>'
+						content = content
+								+ '<div class="panel-body">';
+						content = content
+								+ '<img src="'+response[c].url+'"> &nbsp;';
+						content = content+'<button class="btn btn-primary btn-xs"  onclick=openVideo("'+response[c].videoId+'")>Launch video</button>';
+						content = content+'<button class="btn btn-primary btn-xs"  onclick=tweetthis("'+response[c].videoId+'")>Tweet This</button>';
+						content = content
+								+ '</div></div></div>';
+						if (i % 3 == 0) {
+							content = content + '</div>';
+							content = content
+									+ '<div class="row">';
+						}
+					}
+					content = content + '</div>';
+					jQuery('#content').html(content);
+				},
+				error : function(response) {
+
+				}
+			});
+}
+
+function openVideo(id) {
+	jQuery('#ytapiplayer').html();
+	jQuery('#myModal').modal('show');
+	var videoUrl = 'http://www.youtube.com/v/' + id
+			+ '?enablejsapi=1&playerapiid=ytplayer&version=3';
+	var vidWidth = 560; // default
+	var vidHeight = 315; // default
+	if ( $(this).attr('data-width') ) { vidWidth = parseInt($(this).attr('data-width')); }
+	if ( $(this).attr('data-height') ) { vidHeight = parseInt($(this).attr('data-height')); }
+	var iFrameCode = '<iframe width="' + vidWidth + '" height="'+ vidHeight +'" scrolling="no" allowtransparency="true" allowfullscreen="true" src="'+videoUrl+'" frameborder="0"></iframe>';
+	 
+	// Replace Modal HTML with iFrame Embed
+	$('#mediaModal .modal-body').html(iFrameCode);
+	// Set new width of modal window, based on dynamic video content
+	$('#mediaModal').on('show.bs.modal', function () {
+	// Add video width to left and right padding, to get new width of modal window
+	var modalBody = $(this).find('.modal-body');
+	var modalDialog = $(this).find('.modal-dialog');
+	var newModalWidth = vidWidth + parseInt(modalBody.css("padding-left")) + parseInt(modalBody.css("padding-right"));
+	newModalWidth += parseInt(modalDialog.css("padding-left")) + parseInt(modalDialog.css("padding-right"));
+	newModalWidth += 'px';
+	// Set width of modal (Bootstrap 3.0)
+	$(this).find('.modal-dialog').css('width', newModalWidth);
+	});
+	 
+	// Open Modal
+	$('#mediaModal').modal();
+	swfobject.embedSWF(videoUrl, "ytapiplayer", "425", "356", "8", null, null,
+			params, atts);
+}
+
+
+function tweetthis(id) {
+	var videoUrl = 'http://www.youtube.com/v/' + id
+			+ '?enablejsapi=1&playerapiid=ytplayer&version=3';
+	alert("in")
+	jQuery
+	.ajax({
+		type : "POST",
+		url : "/myfirstmashup/tweetvideo",
+		async : false,
+		data :{ url : videoUrl},
+		dataType : 'json',
+		success : function(response) {
+			
+		},
+		error:function(response) {
+
+		}
+	});
 }
