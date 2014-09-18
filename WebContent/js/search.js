@@ -42,7 +42,7 @@ function search() {
 						
 						content = content
 								+ '</div></div></div></div>';
-						if (i % 3 == 0) {
+						if (i % 4 == 0) {
 							content = content + '</div>';
 							content = content + '<div class="row">';
 						}
