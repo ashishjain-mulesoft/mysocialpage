@@ -49,6 +49,49 @@ html,body,#map-canvas {
 
 <body data-spy="scroll" data-target=".bs-docs-sidebar"
 	data-twttr-rendered="true">
+	<div class="navbar navbar-default">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target=".navbar-responsive-collapse">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">Brand</a>
+		</div>
+		<div class="navbar-collapse collapse navbar-responsive-collapse">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="#">Active</a></li>
+				<li><a href="#">Link</a></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="#">Action</a></li>
+						<li><a href="#">Another action</a></li>
+						<li><a href="#">Something else here</a></li>
+						<li class="divider"></li>
+						<li class="dropdown-header">Dropdown header</li>
+						<li><a href="#">Separated link</a></li>
+						<li><a href="#">One more separated link</a></li>
+					</ul></li>
+			</ul>
+			<form class="navbar-form navbar-left">
+				<input class="form-control col-lg-8" placeholder="Search"
+					type="text">
+			</form>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#">Link</a></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="#">Action</a></li>
+						<li><a href="#">Another action</a></li>
+						<li><a href="#">Something else here</a></li>
+						<li class="divider"></li>
+						<li><a href="#">Separated link</a></li>
+					</ul></li>
+			</ul>
+		</div>
+	</div>
 	<div class="row search">
 		<div class="col-md-8 col-md-offset-2">
 
@@ -88,6 +131,30 @@ html,body,#map-canvas {
 					<div id="ytapiplayer"></div>
 				</div>
 				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="smsModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<input class="form-control" id="smsnumber"
+							placeholder="Phone Number" type="text">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" onclick="smsvideo()" data-dismiss="modal">Send
+						SMS</button>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>
 			</div>
@@ -143,10 +210,22 @@ html,body,#map-canvas {
 													+ '<div class="panel-body">';
 											content = content
 													+ '<img src="'+response[c].url+'"> &nbsp;';
-											content = content+'<button class="btn btn-primary btn-xs"  onclick=openVideo("'+response[c].videoId+'")>Launch video</button>'
-											content = content+'<button class="btn btn-primary btn-xs"  onclick=tweetthis("'+response[c].videoId+'")>Tweet This</button>';
+											content = content+'<div class="btn-group-vertical">';
 											content = content
-													+ '</div></div></div>';
+													+ '<a href="#" class="btn btn-primary btn-xs"  onclick=openVideo("'
+													+ response[c].videoId
+													+ '")>Launch video</a>'
+											content = content
+													+ '<a href="#" class="btn btn-primary btn-xs"  onclick=tweetthis("'
+													+ response[c].videoId
+													+ '")>Tweet This</a>';
+											content = content
+													+ '<a href="#" class="btn btn-primary btn-xs"  onclick=setMainSmsUrl("'
+													+ response[c].videoId
+													+ '")>SMS</a>';
+											
+											content = content
+													+ '</div></div></div></div>';
 											if (i % 3 == 0) {
 												content = content + '</div>';
 												content = content
@@ -160,9 +239,9 @@ html,body,#map-canvas {
 
 									}
 								});
-						$('#mediaModal').on('hidden.bs.modal', function () {
+						$('#mediaModal').on('hidden.bs.modal', function() {
 							$('#mediaModal .modal-body').html('');
-							});
+						});
 					});
 </script>
 </html>
